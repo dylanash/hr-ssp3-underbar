@@ -205,13 +205,29 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    return _.reduce(collection, function(iterator, item) {
-      if (!iterator(item)) {
+    return _.reduce(collection, function(accumulator, item) {
+        var truthTest = '';
+
+        if (iterator === undefined) {
+          truthTest = !(_.identity(item));
+        } else {
+          truthTest = !iterator(item);
+        }
+
+        if (truthTest) {
+          accumulator = false;
+        }
+
+        return accumulator;
+      }, true)
+    
+    // source^: http://www.replit.info/H8rw/1
+      /* if (!iterator) {
         return false;
       } else {
         return true;
       }
-    }, false);
+    }, false); */
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -240,11 +256,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var addProp = function (value, key) {
+      obj[key] = value;
+    }
+    for (var i = 1; i < arguments.length; i++) {
+      _.each(arguments[i],addProp);
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+      var addProp = function (value, key) {
+      if (!obj.hasOwnProperty(key)) {
+        obj[key] = value;
+      }   
+    }
+    for (var i = 1; i < arguments.length; i++) {
+      _.each(arguments[i],addProp);
+    }
+    return obj;
   };
 
 
@@ -288,6 +320,16 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var isMemorized = false;
+    var result;
+
+    return function () {
+      if (!isMemorized) {
+      result = func.apply(this, arguments);
+      isMemorized = true;
+      }
+    }
+    return result;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
