@@ -38,13 +38,11 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    if (array.length === 0 || n > array.length ) {
+    var long = array.length;
+    if (n > long) {
       return array;
-    } else if (n === undefined) {
-      return array[array.length-1]
-    } else {
-      return array.slice(array.length-n, array.length);
     }
+    return n === undefined ? array[long-1] : array.slice(long-n, long);
   };
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
@@ -52,7 +50,7 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-    if (Array.isArray(collection)) {
+     if (Array.isArray(collection)) {
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
@@ -60,7 +58,7 @@
       for (var k in collection) {
         iterator(collection[k], k, collection);
       }
-    }
+    } 
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -83,11 +81,13 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
         var output = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (test(collection[i])) {
-        output.push(collection[i]);
+    
+     _.each(collection,function (item, index) {
+     if (test(item)) {
+       output.push(item)
       }
-    }
+    });
+    
     return output;
   };
 
