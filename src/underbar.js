@@ -82,7 +82,7 @@
   _.filter = function(collection, test) {
         var output = [];
     
-     _.each(collection,function (item, index) {
+     _.each(collection, function (item, index) {
      if (test(item)) {
        output.push(item)
       }
@@ -96,11 +96,10 @@
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
         var output = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (!test(collection[i])) {
-        output.push(collection[i]);
-      }
-    }
+    
+    output = _.filter(collection, function(item) {
+      return !(test(item))
+    });
     return output;
   };
 
@@ -129,9 +128,10 @@
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
     var output = [];
-    for (var i = 0; i < collection.length; i++) {
-      output.push(iterator(collection[i]));
-    }
+    
+    _.each(collection, function(item) { 
+      output.push(iterator(item))
+    });
     return output;
   };
 
@@ -206,7 +206,7 @@
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
     var passed = true;
-    _.each(collection, function(value, key, collection){
+    _.each(collection, function(value, key, collection) {
       if (iterator === undefined)  {
         if (!value) {
           passed = false;
